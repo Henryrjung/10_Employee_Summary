@@ -19,7 +19,7 @@ const teamQuestions = [
     {
         type: "list",
         message: "Please select an employee position",
-        choices: ["Manager", "Engineer", "Intern"],
+        choices: ["manager", "engineer", "intern"],
         name: "position",
     },
     // ask for name
@@ -45,18 +45,21 @@ const teamQuestions = [
         type: "input",
         message: "Please enter the manager office number",
         name: "officeNumber",
+        when: answers => answers.position ==="manager"
     },
     // ask for github if engineer
     {
         type: "input",
         message: "Please enter the gihub username",
         name: "github",
+        when: answers => answers.position ==="engineer"
     },
     // ask for school if intern
     {
         type: "input",
         message: "Please enter the school",
         name: "school",
+        when: answers => answers.position ==="intern"
     },
     // prompt to add an another employee
     {
@@ -83,7 +86,7 @@ async function questions() {
                 const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school);
                 fullTeam.push(newIntern);
             }
-            if (answers.back === "yes") {
+            if (answers.addAnother === "yes") {
                 return questions();
             }
         })
