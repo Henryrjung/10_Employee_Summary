@@ -19,7 +19,7 @@ const teamQuestions = [
     {
         type: "list",
         message: "Please select an employee position",
-        choices: ["manager", "engineer", "intern"],
+        choices: ["Manager", "Engineer", "Intern"],
         name: "position",
     },
     // ask for name
@@ -45,21 +45,21 @@ const teamQuestions = [
         type: "input",
         message: "Please enter the manager office number",
         name: "officeNumber",
-        when: answers => answers.position ==="manager"
+        when: answers => answers.position ==="Manager"
     },
     // ask for github if engineer
     {
         type: "input",
         message: "Please enter the gihub username",
         name: "github",
-        when: answers => answers.position ==="engineer"
+        when: answers => answers.position ==="Engineer"
     },
     // ask for school if intern
     {
         type: "input",
         message: "Please enter the school",
         name: "school",
-        when: answers => answers.position ==="intern"
+        when: answers => answers.position ==="Intern"
     },
     // prompt to add an another employee
     {
@@ -74,55 +74,32 @@ async function questions() {
     await inquirer
         .prompt(teamQuestions)
         .then(answers => {
-            if (answers.title === "manager") {
+            if (answers.position === "Manager") {
                 const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
                 fullTeam.push(newManager);
             }
-            if (answers.title === "engineer") {
+            if (answers.position === "Engineer") {
                 const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
                 fullTeam.push(newEngineer);
             }
-            if (answers.title === "intern") {
+            if (answers.position === "Intern") {
                 const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school);
                 fullTeam.push(newIntern);
             }
             if (answers.addAnother === "yes") {
                 return questions();
             }
-        })
+        });
 }
 // render the team
 async function renderTeam() {
-    const res = await render(fullTeam);
+    const response = await render(fullTeam);
     if (fs.existsSync(OUTPUT_DIR)) {
-        fs.writeFileSync(outputPath, res)
+        fs.writeFileSync(outputPath, response)
     } else {
         fs.mkdirSync(OUTPUT_DIR);
-        fs.writeFileSync(outputPath, res);
+        fs.writeFileSync(outputPath, response);
     }
 }
 //run functions
 questions().then(renderTeam);
-
-
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
