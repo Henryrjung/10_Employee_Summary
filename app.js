@@ -12,34 +12,80 @@ const render = require("./lib/htmlRenderer");
 
 
 // Write code to use inquirer to gather information about the development team members,
-const initialPrompt = () => {
-    console.log('Please enter your first team member!');
-    inquirer.prompt([
-        // name
-        {
-            type: 'input',
-            message: 'What is your managers name?',
-            name: 'managerName',
-        },
-        // id
-        {
-            type: 'input',
-            message: 'What is your managers id number?',
-            name: 'managerId',
-        },
-        // email
-        {
-            type: 'input',
-            message: 'what is your managers email?',
-            name: 'managerEmail',
-        },
-        // office number
-        {
-            type: 'input',
-            message: 'What is your managers office number?',
-            name: 'managerOfficeNumber',
-        }
-    ])
+const fullTeam = [];
+const teamQuestions = [
+    // ask for employee status
+    {
+        type: "list",
+        message: "Please select an employee position",
+        choices: ["Manager", "Engineer", "Intern"],
+        name: "position",
+    },
+    // ask for name
+    {
+        type: "input",
+        message: "Please enter an employee name",
+        name: "name",
+    },
+    // ask for employee id
+    {
+        type: "input",
+        message: "Please enter an employee id number",
+        name: "id",
+    },
+    // ask for email
+    {
+        type: "input",
+        message: "Please enter an employee email",
+        name: "email",
+    },
+    // ask for office number if manager
+    {
+        type: "input",
+        message: "Please enter the manager office number",
+        name: "officeNumber",
+    },
+    // ask for github if engineer
+    {
+        type: "input",
+        message: "Please enter the gihub username",
+        name: "github",
+    },
+    // ask for school if intern
+    {
+        type: "input",
+        message: "Please enter the school",
+        name: "school",
+    },
+    // prompt to add an another employee
+    {
+        type: "list",
+        message: "Would you like to add another employee?",
+        choices: ["yes", "no"],
+        name: "addAnother",
+    },
+];
+
+async function questions() {
+    await inquirer
+        .prompt(teamQuestions)
+        .then(answers => {
+            if (answers.title === "manager") {
+                const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+                fullTeam.push(newManager);
+            }
+            if (answers.title === "engineer") {
+                const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
+                fullTeam.push(newEngineer);
+            }
+            if (answers.title === "intern") {
+                const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school);
+                fullTeam.push(newIntern);
+            }
+            if (answers.back === "yes") {
+                return questions();
+            }
+        })
 }
 // and to create objects for each team member (using the correct classes as blueprints!)
 
