@@ -9,10 +9,11 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { deepStrictEqual } = require("assert");
 
-
-// Write code to use inquirer to gather information about the development team members,
+// team object
 const fullTeam = [];
+// questions 
 const teamQuestions = [
     // ask for employee status
     {
@@ -65,7 +66,7 @@ const teamQuestions = [
         name: "addAnother",
     },
 ];
-
+// ask inquirer questions
 async function questions() {
     await inquirer
         .prompt(teamQuestions)
@@ -87,6 +88,20 @@ async function questions() {
             }
         })
 }
+// render the team
+async function renderTeam() {
+    const res = await render(fullTeam);
+    if (fs.existsSync(OUTPUT_DIR)) {
+        fs.writeFileSync(outputPath, res)
+    } else {
+        fs.mkdirSync(OUTPUT_DIR);
+        fs.writeFileSync(outputPath, res);
+    }
+}
+//run functions
+questions().then(renderTeam);
+
+
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 // After the user has input all employees desired, call the `render` function (required
