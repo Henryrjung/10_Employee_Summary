@@ -30,7 +30,11 @@ Github repo: https://github.com/Henryrjung/10_Employee_Summary
 
 ## Screenshots
 
+![Image 1](./assets/10_team_generator_screenshot.PNG)
+
 # Demo
+
+* https://drive.google.com/file/d/1q_le2jTK2nMjh3iJAffeIMoWLnhHLYCJ/view
 
 ## Credits
 * https://www.npmjs.com/package/inquirer
